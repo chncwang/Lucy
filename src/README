@@ -1,0 +1,62 @@
+Lucy:
+Lucy is a powerful and lightweight Lua wapper for C language, which has three design goals:
+1) Hide the lua_State* type virtual stack, and hide the official C API, which is    based on the virtual stack.
+2) Use Lua codes in C more plain and more natually.
+3) Regard Lua reference type, i.e. table and function as first-class type in C. Actually, it is a supplement for 2).
+
+Example:
+Here is a period of Lua code in Lua file "a.lua":
+
+function Loc(x, y)
+    return function() return x, y end
+end
+
+function Area(loc)
+    local x, y = loc()
+    return x * y
+end
+
+Given the value of x and y, How to call the function Area?
+Using Lucy, the thing is simple:
+
+int Area(int x, int y)
+{
+    lucy_File file = lucy_CreateFile();
+    lucy_OpenFile(&file, "a.lua");
+
+    lucy_Data Loc = lucy_GetData(&file, "Loc");
+    lucy_Data nx = lucy_Num(x);
+    lucy_Data ny = lucy_Num(y);
+    lucy_Data loc = lucy_Call(&Loc, 1, 2, &nx, &ny).datas_[0];
+    
+    lucy_Data Area = lucy_GetData(&file, "Area");
+    lucy_Data area = lucy_Call(&Area, 1, 1, &loc).datas_[0];
+    
+    lucy_CloseFile(&file);
+    return area;
+}
+
+Interfaces:
+file:
+lucy_File lucy_CreateFile();
+void lucy_OpenFile(const lucy_File *lua_file, const char *name);
+void lucy_CloseFile(const lucy_File *lua_file);
+lucy_Data lucy_GetData(const lucy_File *lua_file,
+                       const char *name);
+
+Variants creaating:
+lucy_Data lucy_Num(double num);
+lucy_Data lucy_Bool(bool boolean);
+lucy_Data lucy_Str(const char *str);
+lucy_Data lucy_Nil();
+
+Function:
+lucy_List lucy_CallWithList(const lucy_Data *func, int rc,
+                            const lucy_List *args);
+lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...);
+lucy_List lucy_GetList(size_t len, ...);
+
+Table:
+lucy_Data lucy_TblData(const lucy_Data *tbl, const char *key);
+lucy_Data lucy_ArrData(const lucy_Data *tbl, int index);
+int lucy_ArrLen(const lucy_Data *tbl);

@@ -98,7 +98,7 @@ lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...)
         list.datas_[i] = *(va_arg(arg, lucy_Data *));
     }
     va_end(arg);
-    
+
     return lucy_CallWithList(func, rc, &list);
 }
 
@@ -111,10 +111,12 @@ void lucy_LuaFunc_TEST()
 {
     lucy_File file = lucy_CreateFile();
     lucy_OpenFile(&file, "/Users/wangqiansheng/Code/a.lua");
-    lucy_Data sum = lucy_GetData(&file, "sum");
+    lucy_Data Loc = lucy_GetData(&file, "Loc");
     lucy_Data five = lucy_Num(5);
-    lucy_List list = lucy_Call(&sum, 1, 2, &five, &five);
-    lucy_PrintList(&list);
+    lucy_Data loc = lucy_Call(&Loc, 1, 2, &five, &five).datas_[0];
+    lucy_Data GetArea = lucy_GetData(&file, "GetArea");
+    lucy_Data area = lucy_Call(&GetArea, 1, 1, &loc).datas_[0];
+    lucy_PrintData(&area);
 }
 
 #endif
