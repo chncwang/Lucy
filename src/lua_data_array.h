@@ -16,6 +16,8 @@ typedef struct {
 
 lucy_List lucy_GetList(size_t len, ...);
 
+void lucy_AddDataToList(lucy_List *list, const lucy_Data *data);
+
 #ifdef LUCY_DEBUG
 
 void lucy_PrintList(const lucy_List *arr);

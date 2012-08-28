@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/lua_table.o \
 	${OBJECTDIR}/src/state_util.o \
 	${OBJECTDIR}/src/lua_data_array.o \
+	${OBJECTDIR}/src/lua_func_TEST.o \
 	${OBJECTDIR}/src/lua_value.o \
 	${OBJECTDIR}/src/lua_data.o \
 	${OBJECTDIR}/src/lucy.o \
@@ -59,11 +60,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=/Library/lua-5.2.1/src/liblua.a
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lucy
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lucy: /Library/lua-5.2.1/src/liblua.a
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lucy: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -72,42 +75,47 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lucy: ${OBJECTFILES}
 ${OBJECTDIR}/src/lua_table.o: src/lua_table.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_table.o src/lua_table.c
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_table.o src/lua_table.c
 
 ${OBJECTDIR}/src/state_util.o: src/state_util.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/state_util.o src/state_util.c
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/state_util.o src/state_util.c
 
 ${OBJECTDIR}/src/lua_data_array.o: src/lua_data_array.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_data_array.o src/lua_data_array.c
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_data_array.o src/lua_data_array.c
+
+${OBJECTDIR}/src/lua_func_TEST.o: src/lua_func_TEST.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_func_TEST.o src/lua_func_TEST.c
 
 ${OBJECTDIR}/src/lua_value.o: src/lua_value.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_value.o src/lua_value.c
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_value.o src/lua_value.c
 
 ${OBJECTDIR}/src/lua_data.o: src/lua_data.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_data.o src/lua_data.c
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_data.o src/lua_data.c
 
 ${OBJECTDIR}/src/lucy.o: src/lucy.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lucy.o src/lucy.c
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lucy.o src/lucy.c
 
 ${OBJECTDIR}/src/lua_file.o: src/lua_file.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_file.o src/lua_file.c
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_file.o src/lua_file.c
 
 ${OBJECTDIR}/src/lua_func.o: src/lua_func.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_func.o src/lua_func.c
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_func.o src/lua_func.c
 
 # Subprojects
 .build-subprojects:

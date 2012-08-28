@@ -3,42 +3,7 @@
 #include "lua_func.h"
 #include "state_util.h"
 #include "lua_value.h"
-
-
-static void PushNum(lua_State *state, const lucy_Data *luadata)
-{
-    DASSERT(luadata->type_ == lucy_TypeNum);
-    lua_pushnumber(state, luadata->cntnt_.num_);
-}
-
-
-static void PushStr(lua_State *state, const lucy_Data *luadata)
-{
-    DASSERT(luadata->type_ == lucy_TypeStr);
-    lua_pushstring(state, luadata->cntnt_.str_);
-}
-
-
-static void PushBool(lua_State *state, const lucy_Data *luadata)
-{
-    DASSERT(luadata->type_ == lucy_TypeBool);
-    lua_pushboolean(state, luadata->cntnt_.boolean_);
-}
-
-
-static void PushRef(lua_State *state, const lucy_Data *luadata)
-{
-    DASSERT(luadata->type_ == lucy_TypeFunc ||
-            luadata->type_ == lucy_TypeTbl);
-    lua_pushvalue(state, lucy_GetIndex(*luadata));
-}
-
-
-static void PushNil(lua_State *state, const lucy_Data *luadata)
-{
-    DASSERT(luadata->type_ == lucy_TypeNil);
-    lua_pushnil(state);
-}
+#include "lua_file.h"
 
 
 lucy_List lucy_CallWithList(const lucy_Data *func, int rc,
@@ -48,21 +13,11 @@ lucy_List lucy_CallWithList(const lucy_Data *func, int rc,
     lua_State *state = lucy_GetState(*func);
     lua_pushvalue(state, lucy_GetIndex(*func));
 
-    static void
-    (*PushData[lucy_TypesCount])(lua_State *, const lucy_Data *) = {
-        &PushNum,
-        &PushStr,
-        &PushBool,
-        &PushRef,
-        &PushRef,
-        &PushNil
-    };
-
     int i;
     size_t args_c = args->len_;
     for (i=0; i<args_c; ++i) {
         const lucy_Data *dp = args->datas_ + i;
-        PushData[dp->type_](state, dp);
+        PushData(lucy_GetState(*func), dp);
     }
 
     if (lua_pcall(state, args_c, rc, 0) != 0) {
@@ -103,6 +58,28 @@ lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...)
 }
 
 
+void lucy_CallCFunc(lua_State *state, lucy_CFuncWithList cfunc, int rc, int ac)
+{
+    int top = lua_gettop(state);
+    lucy_List args = lucy_GetList(0);
+
+    int i;
+    DASSERT(MAX_LUADATA_ARRAY_LEN >= ac);
+    for (i=0; i<ac; ++i) {
+        int index = top - i;
+        lucy_Data arg = GetLuaDataOnStack(state, index);
+        args.datas_[ac - 1 - i] = arg;
+        PopTop(state, &arg);
+    }
+
+    lucy_List results = cfunc(&args);
+
+    for (i=0; i<results.len_; ++i) {
+        PushData(state, &results.datas_[i]);
+    }
+}
+
+
 #ifdef LUCY_DEBUG
 
 #include "lua_file.h"
@@ -111,12 +88,10 @@ void lucy_LuaFunc_TEST()
 {
     lucy_File file = lucy_CreateFile();
     lucy_OpenFile(&file, "/Users/wangqiansheng/Code/a.lua");
-    lucy_Data Loc = lucy_GetData(&file, "Loc");
-    lucy_Data five = lucy_Num(5);
-    lucy_Data loc = lucy_Call(&Loc, 1, 2, &five, &five).datas_[0];
-    lucy_Data GetArea = lucy_GetData(&file, "GetArea");
-    lucy_Data area = lucy_Call(&GetArea, 1, 1, &loc).datas_[0];
-    lucy_PrintData(&area);
+    lucy_Run(&file);
+    lucy_Data ab = lucy_GetData(&file, "ab");
+    lucy_List r = lucy_Call(&ab, 2, 0);
+    DPRINT("%lf, %lf", r.datas_[0].cntnt_.num_, r.datas_[1].cntnt_.num_);
 }
 
 #endif

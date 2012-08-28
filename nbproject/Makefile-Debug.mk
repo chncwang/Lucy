@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/lua_table.o \
 	${OBJECTDIR}/src/state_util.o \
 	${OBJECTDIR}/src/lua_data_array.o \
+	${OBJECTDIR}/src/lua_func_TEST.o \
 	${OBJECTDIR}/src/lua_value.o \
 	${OBJECTDIR}/src/lua_data.o \
 	${OBJECTDIR}/src/lucy.o \
@@ -85,6 +86,11 @@ ${OBJECTDIR}/src/lua_data_array.o: src/lua_data_array.c
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.c) -g -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_data_array.o src/lua_data_array.c
+
+${OBJECTDIR}/src/lua_func_TEST.o: src/lua_func_TEST.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.c) -g -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua_func_TEST.o src/lua_func_TEST.c
 
 ${OBJECTDIR}/src/lua_value.o: src/lua_value.c 
 	${MKDIR} -p ${OBJECTDIR}/src

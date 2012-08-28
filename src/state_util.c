@@ -91,3 +91,53 @@ bool PopTop(lua_State *state, const lucy_Data *data)
         return true;
     }
 }
+
+static void PushNum(lua_State *state, const lucy_Data *luadata)
+{
+    DASSERT(luadata->type_ == lucy_TypeNum);
+    lua_pushnumber(state, luadata->cntnt_.num_);
+}
+
+
+static void PushStr(lua_State *state, const lucy_Data *luadata)
+{
+    DASSERT(luadata->type_ == lucy_TypeStr);
+    lua_pushstring(state, luadata->cntnt_.str_);
+}
+
+
+static void PushBool(lua_State *state, const lucy_Data *luadata)
+{
+    DASSERT(luadata->type_ == lucy_TypeBool);
+    lua_pushboolean(state, luadata->cntnt_.boolean_);
+}
+
+
+static void PushRef(lua_State *state, const lucy_Data *luadata)
+{
+    DASSERT(luadata->type_ == lucy_TypeFunc ||
+            luadata->type_ == lucy_TypeTbl);
+    lua_pushvalue(state, lucy_GetIndex(*luadata));
+}
+
+
+static void PushNil(lua_State *state, const lucy_Data *luadata)
+{
+    DASSERT(luadata->type_ == lucy_TypeNil);
+    lua_pushnil(state);
+}
+
+
+void PushData(lua_State *state, const lucy_Data *data)
+{
+    static void (*Push[lucy_TypesCount])(lua_State *, const lucy_Data *) = {
+        PushNum,
+        PushStr,
+        PushBool,
+        PushRef,
+        PushRef,
+        PushNil
+    };
+
+    (*Push[data->type_])(state, data);
+}

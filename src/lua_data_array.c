@@ -22,6 +22,13 @@ lucy_List lucy_GetList(size_t len, ...)
 }
 
 
+void lucy_AddDataToList(lucy_List *list, const lucy_Data *data)
+{
+    DASSERT(MAX_LUADATA_ARRAY_LEN > list->len_);
+    list->datas_[list->len_++] = *data;
+}
+
+
 #ifdef LUCY_DEBUG
 
 #include "lua_file.h"

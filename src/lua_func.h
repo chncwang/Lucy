@@ -23,9 +23,29 @@ lucy_List lucy_CallWithList(const lucy_Data *func, int rc,
  * ****************************************************************************/
 lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...);
 
+typedef lucy_List (*lucy_CFuncWithList)(const lucy_List *args);
+
+void lucy_CallCFunc(lua_State *state, lucy_CFuncWithList cfunc, int rc, int ac);
+
+#define LUA_CFUNCTION_NAME(name) lucy_LuaCFunction##name
+
+#define lucy_GenLuaCFunction(cfunc, rc, ac) \
+static int LUA_CFUNCTION_NAME(cfunc)(lua_State *state) \
+{\
+    lucy_CallCFunc(state, cfunc, rc, ac);\
+    return rc;\
+}
+
+
+#define lucy_SetCFunc(file, name, cfunc) \
+    lua_pushcfunction((file)->state_, LUA_CFUNCTION_NAME(cfunc));\
+    lua_setglobal((file)->state_, name)
+
+
 #ifdef LUCY_DEBUG
 
 void lucy_LuaFunc_TEST(); /* for test. */
+void lucy_CFunc_TEST();
 
 #endif
 

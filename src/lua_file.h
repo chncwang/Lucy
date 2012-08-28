@@ -9,7 +9,7 @@
  * description          : the lua file which runs the lua program.
  * state_ [lua_State *] : the global lua state.
  * ****************************************************************************/
-typedef struct {
+typedef struct lucy_File{
     lua_State *state_;
 } lucy_File;
 
@@ -23,6 +23,7 @@ lucy_File lucy_CreateFile();
  * ****************************************************************************/
 void lucy_OpenFile(const lucy_File *lua_file, const char *name);
 
+void lucy_Run(const lucy_File *file);
 void lucy_CloseFile(const lucy_File *lua_file);
 
 /* *****************************************************************************
@@ -32,6 +33,9 @@ void lucy_CloseFile(const lucy_File *lua_file);
  * ****************************************************************************/
 lucy_Data lucy_GetData(const lucy_File *lua_file,
                        const char *name);
+
+void lucy_SetData(const lucy_File *lua_file, const char *name,
+                  const lucy_Data *data);
 
 #ifdef LUCY_DEBUG
 

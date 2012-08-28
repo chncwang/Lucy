@@ -15,9 +15,17 @@ lucy_File lucy_CreateFile()
 
 void lucy_OpenFile(const lucy_File *lua_file, const char *name)
 {
-    if (luaL_loadfile(lua_file->state_, name) ||
-            lua_pcall(lua_file->state_, 0, 0, 0)) {
+    if (luaL_loadfile(lua_file->state_, name)) {
         DPRINT("%s", lua_tostring(lua_file->state_, -1));
+        DASSERT(false);
+    }
+}
+
+
+void lucy_Run(const lucy_File *file)
+{
+    if (lua_pcall(file->state_, 0, 0, 0)) {
+        DPRINT("%s", lua_tostring(file->state_, -1));
         DASSERT(false);
     }
 }
@@ -40,25 +48,28 @@ lucy_Data lucy_GetData(const lucy_File *lua_file,
 }
 
 
+void lucy_SetData(const lucy_File *lua_file, const char *name,
+                  const lucy_Data *data)
+{
+    lua_State *state = lua_file->state_;
+    PushData(state, data);
+    lua_setglobal(state, name);
+}
+
+
 #ifdef LUCY_DEBUG
+
+#include "lua_value.h"
 
 void lucy_LuaFile_TEST()
 {
     lucy_File lua_file = lucy_CreateFile();
     lucy_OpenFile(&lua_file, "/Users/wangqiansheng/Code/a.lua");
-    lucy_Data data = lucy_GetData(&lua_file, "num");
-    lucy_PrintData(&data);
-    lucy_Data str = lucy_GetData(&lua_file, "str");
-    lucy_PrintData(&str);
-    lucy_Data boolean = lucy_GetData(&lua_file, "bool");
-    lucy_PrintData(&boolean);
-    lucy_Data table = lucy_GetData(&lua_file, "table");
-    lucy_PrintData(&table);
     lucy_Data sum = lucy_GetData(&lua_file, "sum");
+    lucy_Data five = lucy_Num(5);
+    lucy_SetData(&lua_file, "sum", &five);
+    sum = lucy_GetData(&lua_file, "sum");
     lucy_PrintData(&sum);
-    lucy_Data n = lucy_GetData(&lua_file, "n");
-    lucy_PrintData(&n);
-    lucy_CloseFile(&lua_file);
 }
 
 #endif
