@@ -51,7 +51,7 @@ typedef struct {
 #define lucy_GetIndex(data) ((data).cntnt_.ref_.index_)
 #define lucy_GetState(data) ((data).cntnt_.ref_.state_)
 
-#define lucy_ShoudLeaveOnStack(data) \
+#define lucy_ShoudRegister(data) \
     (((data).type_ == lucy_TypeStr || (data).type_ == lucy_TypeFunc || \
             (data).type_ == lucy_TypeTbl) ? true : false)
 

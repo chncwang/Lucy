@@ -53,7 +53,6 @@ static lucy_Data GetRef(lua_State *state, int index)
     lucy_Data data = {GetType(state, index)};
     lucy_Ref *ref = &(data.cntnt_.ref_);
     ref->state_ = state;
-    ref->index_ = lua_gettop(state);
     return data;
 }
 
@@ -82,13 +81,13 @@ lucy_Data GetLuaDataOnStack(lua_State *state, int index)
 }
 
 
-bool PopTop(lua_State *state, const lucy_Data *data)
+void PopTop(lua_State *state, lucy_Data *data)
 {
-    if (lucy_ShoudLeaveOnStack(*data)) {
-        return false;
+    if (lucy_ShoudRegister(*data)) {
+        data->cntnt_.ref_.index_ = luaL_ref(state,
+                                            LUA_REGISTRYINDEX);
     } else {
         lua_pop(state, 1);
-        return true;
     }
 }
 
@@ -117,7 +116,7 @@ static void PushRef(lua_State *state, const lucy_Data *luadata)
 {
     DASSERT(luadata->type_ == lucy_TypeFunc ||
             luadata->type_ == lucy_TypeTbl);
-    lua_pushvalue(state, lucy_GetIndex(*luadata));
+    lua_rawgeti(state, LUA_REGISTRYINDEX, lucy_GetIndex(*luadata));
 }
 
 

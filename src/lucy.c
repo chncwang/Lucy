@@ -4,7 +4,8 @@
 
 int main(void) {
 #ifdef LUCY_DEBUG
-    lucy_LuaFunc_TEST();
+    lucy_CFunc_TEST();
+/*    lucy_LuaFunc_TEST();*/
 #endif
     return 0;
 }

@@ -11,7 +11,7 @@ lucy_List lucy_CallWithList(const lucy_Data *func, int rc,
 {
     DASSERT(func->type_ == lucy_TypeFunc);
     lua_State *state = lucy_GetState(*func);
-    lua_pushvalue(state, lucy_GetIndex(*func));
+    lua_rawgeti(state, LUA_REGISTRYINDEX, lucy_GetIndex(*func));
 
     int i;
     size_t args_c = args->len_;
@@ -68,8 +68,8 @@ void lucy_CallCFunc(lua_State *state, lucy_CFuncWithList cfunc, int rc, int ac)
     for (i=0; i<ac; ++i) {
         int index = top - i;
         lucy_Data arg = GetLuaDataOnStack(state, index);
-        args.datas_[ac - 1 - i] = arg;
         PopTop(state, &arg);
+        args.datas_[ac - 1 - i] = arg;
     }
 
     lucy_List results = cfunc(&args);
@@ -87,11 +87,14 @@ void lucy_CallCFunc(lua_State *state, lucy_CFuncWithList cfunc, int rc, int ac)
 void lucy_LuaFunc_TEST()
 {
     lucy_File file = lucy_CreateFile();
-    lucy_OpenFile(&file, "/Users/wangqiansheng/Code/a.lua");
+    lucy_OpenFile(&file, "/Users/wangqiansheng/Code/b.lua");
     lucy_Run(&file);
-    lucy_Data ab = lucy_GetData(&file, "ab");
-    lucy_List r = lucy_Call(&ab, 2, 0);
-    DPRINT("%lf, %lf", r.datas_[0].cntnt_.num_, r.datas_[1].cntnt_.num_);
+    lucy_Data Hello = lucy_GetData(&file, "Hello");
+    lucy_Data t = lucy_Num(5);
+    lucy_Data str = lucy_Str("Hello world!");
+    lucy_Data print = lucy_GetData(&file, "print");
+    lucy_Call(&Hello, 0, 3, &t, &print, &str);
+    lucy_CloseFile(&file);
 }
 
 #endif
