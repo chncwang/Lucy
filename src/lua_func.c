@@ -58,7 +58,7 @@ lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...)
 }
 
 
-void lucy_CallCFunc(lua_State *state, lucy_CFuncWithList cfunc, int rc, int ac)
+void lucy_CallCFunc(lua_State *state, lucy_CFuncWithList cfunc, int ac)
 {
     int top = lua_gettop(state);
     lucy_List args = lucy_GetList(0);

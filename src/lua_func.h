@@ -25,14 +25,14 @@ lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...);
 
 typedef lucy_List (*lucy_CFuncWithList)(const lucy_List *args);
 
-void lucy_CallCFunc(lua_State *state, lucy_CFuncWithList cfunc, int rc, int ac);
+void lucy_CallCFunc(lua_State *state, lucy_CFuncWithList cfunc, int ac);
 
 #define LUA_CFUNCTION_NAME(name) lucy_LuaCFunction##name
 
 #define lucy_GenLuaCFunction(cfunc, rc, ac) \
 static int LUA_CFUNCTION_NAME(cfunc)(lua_State *state) \
 {\
-    lucy_CallCFunc(state, cfunc, rc, ac);\
+    lucy_CallCFunc(state, cfunc, ac);\
     return rc;\
 }
 
