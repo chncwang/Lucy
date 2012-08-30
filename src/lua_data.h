@@ -42,7 +42,7 @@ typedef union {
  * type_ [lucy_LuaDataType]     : type of data.
  * cntnt_ [lucy_LuaDataContent] : content of data.
  * ****************************************************************************/
-typedef struct {
+typedef struct lucy_Data {
     lucy_Type type_;
     lucy_Content cntnt_;
 } lucy_Data;

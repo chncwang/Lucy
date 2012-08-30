@@ -31,8 +31,7 @@ void lucy_CloseFile(const lucy_File *lua_file);
  * lua_file [lucy_LuaFile *] : the lua file, which runs the lua program.
  * name [char *]             : the variable's name.
  * ****************************************************************************/
-lucy_Data lucy_GetData(const lucy_File *lua_file,
-                       const char *name);
+lucy_Data lucy_GetData(const lucy_File *lua_file, const char *name);
 
 void lucy_SetData(const lucy_File *lua_file, const char *name,
                   const lucy_Data *data);

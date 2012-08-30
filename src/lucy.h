@@ -7,5 +7,6 @@
 #include "lua_func.h"
 #include "lua_table.h"
 #include "lua_value.h"
+#include "oo_support.h"
 
 #endif

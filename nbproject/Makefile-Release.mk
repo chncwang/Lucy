@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/src/lua_table.o \
 	${OBJECTDIR}/src/state_util.o \
+	${OBJECTDIR}/src/oo_support.o \
 	${OBJECTDIR}/src/lua_data_array.o \
 	${OBJECTDIR}/src/lua_func_TEST.o \
 	${OBJECTDIR}/src/lua_value.o \
@@ -81,6 +82,11 @@ ${OBJECTDIR}/src/state_util.o: src/state_util.c
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/state_util.o src/state_util.c
+
+${OBJECTDIR}/src/oo_support.o: src/oo_support.c 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.c) -O2 -I/Library/lua-5.2.1/src -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/oo_support.o src/oo_support.c
 
 ${OBJECTDIR}/src/lua_data_array.o: src/lua_data_array.c 
 	${MKDIR} -p ${OBJECTDIR}/src
