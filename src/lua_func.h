@@ -3,6 +3,7 @@
 
 #include "defs.h"
 #include "lua_data_array.h"
+#include "stdarg.h"
 
 /* ****************************************************************************
  * description                  : call the lua function with lucy_List value.
@@ -13,6 +14,8 @@
  * ****************************************************************************/
 lucy_List lucy_CallWithList(const lucy_Data *func, int rc,
                             const lucy_List *args);
+
+lucy_List lucy_VCall(const lucy_Data *func, int rc, int argsc, va_list arg);
 
 /* *****************************************************************************
  * description           : call the lua function with arguments directly.

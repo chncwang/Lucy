@@ -41,6 +41,29 @@ int lucy_ArrLen(const lucy_Data *tbl)
 }
 
 
+lucy_Data lucy_TblDataF(const lucy_Data *tbl, const char *key, ...)
+{
+    DASSERT(tbl->type_ == lucy_TypeTbl);
+    DPRINT("begin");
+    lucy_Data t = lucy_TblData(tbl, key);
+    DPRINT("a");
+
+    va_list arg;
+    va_start(arg, key);
+    while (true) {
+        const char *next = va_arg(arg, const char*);
+        if (next == NULL) {
+            break;
+        } else {
+            lucy_Data data = lucy_TblData(&t, next);
+            t = data;
+        }
+    }
+
+    return t;
+}
+
+
 #ifdef LUCY_DEBUG
 
 #include "lua_file.h"
@@ -49,12 +72,12 @@ int lucy_ArrLen(const lucy_Data *tbl)
 void lucy_Table_TEST()
 {
     lucy_File file = lucy_CreateFile();
-    lucy_OpenFile(&file, "/Users/wangqiansheng/Code/a.lua");
+    lucy_OpenFile(&file, "/Users/wangqiansheng/Code/b.lua");
     lucy_Run(&file);
-    lucy_Data arr = lucy_GetData(&file, "arr");
-    int n = lucy_ArrData(&arr, 3).cntnt_.num_;
-    int len = lucy_ArrLen(&arr);
-    DPRINT("%d, %d", n, len);
+    lucy_Data a = lucy_GetData(&file, "a");
+    DPRINT("got a");
+    lucy_Data d = lucy_TblDataF(&a, "b", "c", "d", NULL);
+    lucy_PrintData(&d);
 }
 
 #endif

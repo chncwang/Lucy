@@ -42,12 +42,11 @@ lucy_List lucy_CallWithList(const lucy_Data *func, int rc,
 }
 
 
-lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...)
+lucy_List lucy_VCall(const lucy_Data *func, int rc, int argsc, va_list arg)
 {
     DASSERT(func->type_ == lucy_TypeFunc);
     lucy_List list = {argsc};
-    va_list arg;
-    va_start(arg, argsc);
+
     int i;
     for (i=0; i<argsc; ++i) {
         list.datas_[i] = *(va_arg(arg, lucy_Data *));
@@ -55,6 +54,16 @@ lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...)
     va_end(arg);
 
     return lucy_CallWithList(func, rc, &list);
+}
+
+
+lucy_List lucy_Call(const lucy_Data *func, int rc, int argsc, ...)
+{
+    DASSERT(func->type_ == lucy_TypeFunc);
+    lucy_List list = {argsc};
+    va_list arg;
+    va_start(arg, argsc);
+    return lucy_VCall(func, rc, argsc, arg);
 }
 
 
@@ -89,11 +98,13 @@ void lucy_LuaFunc_TEST()
     lucy_File file = lucy_CreateFile();
     lucy_OpenFile(&file, "/Users/wangqiansheng/Code/b.lua");
     lucy_Run(&file);
-    lucy_Data Hello = lucy_GetData(&file, "Hello");
-    lucy_Data t = lucy_Num(5);
-    lucy_Data str = lucy_Str("Hello world!");
-    lucy_Data print = lucy_GetData(&file, "print");
-    lucy_Call(&Hello, 0, 3, &t, &print, &str);
+    DPRINT("a");
+    lucy_Data fun = lucy_GetData(&file, "fun");
+    DPRINT("b");
+    lucy_Data hello = lucy_Str("Hello");
+    lucy_Data world = lucy_Str("world!");
+    lucy_Call(&fun, 0, 2, &hello, &world);
+    DPRINT("c");
     lucy_CloseFile(&file);
 }
 
