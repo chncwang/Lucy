@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "lua_table.h"
 #include "state_util.h"
+#include "lua_func.h"
 
 
 lucy_Data lucy_TblData(const lucy_Data *tbl, const char *key)
@@ -44,9 +45,7 @@ int lucy_ArrLen(const lucy_Data *tbl)
 lucy_Data lucy_TblDataF(const lucy_Data *tbl, const char *key, ...)
 {
     DASSERT(tbl->type_ == lucy_TypeTbl);
-    DPRINT("begin");
     lucy_Data t = lucy_TblData(tbl, key);
-    DPRINT("a");
 
     va_list arg;
     va_start(arg, key);
@@ -61,6 +60,18 @@ lucy_Data lucy_TblDataF(const lucy_Data *tbl, const char *key, ...)
     }
 
     return t;
+}
+
+
+lucy_List lucy_TblCall(const lucy_Data *tbl, const char *fname, int rc,
+                       int argsc,
+                       ...)
+{
+    lucy_Data func = lucy_TblData(tbl, fname);
+    
+    va_list arg;
+    va_start(arg, argsc);
+    return lucy_VCall(func, rc, argsc, arg);
 }
 
 
